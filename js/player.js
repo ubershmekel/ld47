@@ -26,7 +26,7 @@ export default class Player {
     this.sprite = scene.physics.add
       .sprite(x, y, "player", 0)
       .setDrag(1000, 0)
-      .setMaxVelocity(300, 400)
+      .setMaxVelocity(300, 800)
       .setSize(18, 24)
       .setOffset(7, 9);
 
@@ -55,11 +55,13 @@ export default class Player {
 
     // Apply horizontal acceleration when left/a or right/d are applied
     if (keys.left.isDown || keys.a.isDown) {
+      // 👈
       sprite.setAccelerationX(-acceleration);
       // No need to have a separate set of graphics for running to the left & to the right. Instead
       // we can just mirror the sprite.
       sprite.setFlipX(true);
     } else if (keys.right.isDown || keys.d.isDown) {
+      // 👉
       sprite.setAccelerationX(acceleration);
       sprite.setFlipX(false);
     } else {
@@ -68,7 +70,9 @@ export default class Player {
 
     // Only allow the player to jump if they are on the ground
     if (onGround && (keys.up.isDown || keys.w.isDown)) {
-      sprite.setVelocityY(-500);
+      // 🦘☝
+      console.log("jump");
+      sprite.setVelocityY(-480);
     }
 
     // Update the animation/texture based on the state of the player
