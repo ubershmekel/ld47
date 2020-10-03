@@ -97,9 +97,9 @@ export default class PlatformerScene extends Phaser.Scene {
     if (pointer.isDown) {
       const prevTile = this.groundLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
       if (!prevTile) {
-        console.log("play!")
         const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
         if (tile) { 
+          console.log("play!")
           tile.setCollision(true);
           this.sounds.play(this.sounds.bank.look, worldPoint.x, worldPoint.y);
         } else {

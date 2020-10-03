@@ -3,7 +3,7 @@ const sounds = {
   look: "look",
 }
 
-const distanceVolumeOne = 400;
+const distanceVolumeOne = 32;
 
 export default class Sounds {
   bank = {};
@@ -36,7 +36,7 @@ export default class Sounds {
   }
 
   play(sound, x, y) {
-    sound.pos(x, y, -distanceVolumeOne / 4);
+    sound.pos(x, y, -distanceVolumeOne / 8);
     const playId = sound.play();
     // sound.pos(x, y, -distanceVolumeOne / 4, playId);
     
