@@ -22,20 +22,21 @@ const config = {
   }
 };
 
-const game = new Phaser.Game(config);
+let game = null;
 
-//Howler.pos(this.x, this.y, -0.5);
-const sound = new Howl({
-  src: ['./audio/sounds.mp3'],
-  // sprite: {
-  //   lightning: [2000, 4147],
-  //   rain: [8000, 9962, true],
-  //   thunder: [19000, 13858],
-  //   music: [34000, 31994, true]
-  // },
-  // volume: 0
+document.body.addEventListener('click', function() {
+  // Waiting for a click to avoid the Audio Context being paused
+  // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
+  
+  // context.resume().then(() => {
+    // sound.play();
+    if (!game) {
+      console.log('Game started');
+      game = new Phaser.Game(config);
+    }
+  // });
 });
 
-sound.play();
+
 
 

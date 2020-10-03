@@ -1,11 +1,13 @@
 import Player from "./player.js";
 import MouseTileMarker from "./mouse-tile-maker.js";
+import Sounds from "./sounds.js";
 
 /**
  * A class that extends Phaser.Scene and wraps up the core logic for the platformer level.
  */
 export default class PlatformerScene extends Phaser.Scene {
   preload() {
+    this.sounds = new Sounds();
     this.load.spritesheet(
       "player",
       "../assets/spritesheets/0x72-industrial-player-32px-extruded.png",
@@ -86,8 +88,18 @@ export default class PlatformerScene extends Phaser.Scene {
     const pointer = this.input.activePointer;
     const worldPoint = pointer.positionToCamera(this.cameras.main);
     if (pointer.isDown) {
+      const prevTile = this.groundLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
       const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
-      tile.setCollision(true);
+      if (tile) {
+        console.log("prevtile", prevTile);
+        if (!prevTile) {
+          console.log("play!")
+          this.sounds.bank.look.play();
+          tile.setCollision(true);
+        }
+      } else {
+        // clicked outside of the game area
+      }
     }
 
     if (

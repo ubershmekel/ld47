@@ -50,6 +50,8 @@ export default class Player {
     const { keys, sprite } = this;
     const onGround = sprite.body.blocked.down;
     const acceleration = onGround ? 600 : 200;
+    // console.log("sprite xy", this.sprite.x, this.sprite.y);
+    //Howler.pos(this.sprite.x, this.sprite.y, 0);
 
     // Apply horizontal acceleration when left/a or right/d are applied
     if (keys.left.isDown || keys.a.isDown) {
