@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Phaser Template</title>
+    <link rel="icon" href="/favicon.ico?v=1.1"> 
+
+    <title>Blind Walker</title>
 
     <style>
       html,
@@ -20,6 +22,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-color: #300;
       }
 
       #game-container > canvas {
@@ -33,13 +36,14 @@
       Blind Walker
     </h1>
     <p>
-      Put on your headphones and click here to start the game. You'll need a keyboard.
+      Put on your headphones 🎧 and click 🖱️ somehwere to start the game. But you'll need a keyboard. Don't ask why.
     </p>
 
     <div id="game-container"></div>
+
     <!-- <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script> -->
     <script src="./js/vendor/phaser.js"></script>
-    <script src="./js/vendor/howler.js"></script>
+    <script src="./js/vendor/howler.js" type="module"></script>
     <script src="./js/index.js" type="module"></script>
 
     <script nomodule>

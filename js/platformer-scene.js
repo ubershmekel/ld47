@@ -84,22 +84,28 @@ export default class PlatformerScene extends Phaser.Scene {
     this.marker.update();
     this.player.update();
 
+    if (this.sounds.bank.look._sounds[0]._panner) {
+      // console.log("soundx", this.sounds.bank.look._sounds[0]._panner.positionX.value, Howler.ctx.listener.positionX.value);
+    }
+    
+    // audio position
+    this.sounds.listenerPos(this.player.sprite.x, this.player.sprite.y);
+
     // Add a colliding tile at the mouse position
     const pointer = this.input.activePointer;
     const worldPoint = pointer.positionToCamera(this.cameras.main);
     if (pointer.isDown) {
       const prevTile = this.groundLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
-      const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
-      if (tile) {
-        console.log("prevtile", prevTile);
-        if (!prevTile) {
-          console.log("play!")
-          this.sounds.bank.look.play();
+      if (!prevTile) {
+        console.log("play!")
+        const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
+        if (tile) { 
           tile.setCollision(true);
+          this.sounds.play(this.sounds.bank.look, worldPoint.x, worldPoint.y);
+        } else {
+          // clicked outside of the game area
         }
-      } else {
-        // clicked outside of the game area
-      }
+      } 
     }
 
     if (
