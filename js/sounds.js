@@ -1,12 +1,13 @@
 import { random } from "./utils.js";
+import soundData from "../dist/soundData.js";
 
-const sounds = {
-  look: "look",
+export const bank = {
 }
 
 const distanceVolumeOne = 32;
 
 function loadSound(options) {
+  console.log('sound options', options);
   const sound = new Howl(options);
   sound.pannerAttr().refDistance = distanceVolumeOne;
   sound.pannerAttr().maxDistance = 300;
@@ -17,40 +18,52 @@ function loadSound(options) {
   // sound.pannerAttr().rolloffFactor = 8;
 
   sound.pos(0, 0, 0);
+
+  // debug sounds
+  window.sound = sound;
+
+  for (const name in options.sprite) {
+    bank[name] = name;
+  }
+
+  console.log("sound bank", bank);
+
   return sound;
 }
 
-export let bank = null;
+const soundh = loadSound(soundData);
 
-function loadBank() {
-  bank = {};
+// export let bank = null;
+
+// function loadBank() {
+  // bank = {};
 
   // Howler.pos(this.x, this.y, -0.5);
 
-  bank.wind = loadSound({
-    src: ['../assets/audio/wind.mp3'],
-    loop: true,
-    volume: 0.5,
-  });
+  // bank.wind = loadSound({
+  //   src: ['../assets/audio/wind.mp3'],
+  //   loop: true,
+  //   volume: 0.5,
+  // });
 
-  bank.snarl = loadSound({
-    src: ['../assets/audio/snarl.mp3'],
-    loop: true,
-    volume: 0.5,
-  });
+  // bank.snarl = loadSound({
+  //   src: ['../assets/audio/snarl.mp3'],
+  //   loop: true,
+  //   volume: 0.5,
+  // });
 
-  bank.look = loadSound({
-    src: ['../assets/audio/sounds.mp3'],
-    // sprite: {
-    //   lightning: [2000, 4147],
-    //   rain: [8000, 9962, true],
-    //   thunder: [19000, 13858],
-    //   music: [34000, 31994, true]
-    // },
-    // volume: 0
-    // loop: true,
-  });
-}
+  // bank.look = loadSound({
+  //   src: ['../assets/audio/sounds.mp3'],
+  //   // sprite: {
+  //   //   lightning: [2000, 4147],
+  //   //   rain: [8000, 9962, true],
+  //   //   thunder: [19000, 13858],
+  //   //   music: [34000, 31994, true]
+  //   // },
+  //   // volume: 0
+  //   // loop: true,
+  // });
+// }
 
 export class Sounds {
 
@@ -58,8 +71,6 @@ export class Sounds {
     if (!bank) {
       loadBank();
     }
-
-
     // this.bank.look.pannerAttr().refDistance = distanceVolumeOne;
 
     // Init pos(0,0,0) because otherwise the first sound gets center-panned
@@ -68,36 +79,51 @@ export class Sounds {
     // this.bank.look.pos(0, 0, 0);
   }
 
-  play(sound, x, y) {
+  play(soundName, x, y) {
     // The `z` is some arbitrary value that makes the switch from
     // left to right not seems too sudden and harsh.
     // sound.pos(x, y, -distanceVolumeOne / 8);
-
-    const playId = sound.play();
-    sound.pos(x, y, -distanceVolumeOne / 4, playId);
+    const soundHowl = this.toHowl(soundName);
+    const playId = soundHowl.play(soundName);
+    soundHowl.pos(x, y, -distanceVolumeOne / 4, playId);
     
-    console.log("sound at", x, y, playId, sound._src);
+    console.log("sound at", soundName, x, y, playId, sound._src);
     return playId;
   }
 
+  toHowl(soundName) {
+    // console.log("to howl " + soundName);
+    if (!bank[soundName]) {
+      throw new Error("Invalid sound name: " + soundName);
+    }
+    return soundh;
+  }
+  
+
   playWind(x, y) {
+    const soundHowl = this.toHowl(bank.wind);
     const playId = this.play(bank.wind, x, y);
     // length ~5000 ms
     const offset = random(0, 3.0);
-    const speed = random(0.7, 1.5);
+    const speed = random(0.5, 1.8);
     // console.log("windseek", offset, playId);
-    bank.wind.seek(offset, playId);
-    bank.wind.rate(speed, playId);
+    // soundHowl.seek(offset, playId);
+    soundHowl.rate(speed, playId);
+    soundHowl.loop(true, playId);
+    soundHowl.volume(0.5, playId);
   }
 
   playSnarl(x, y) {
+    const soundHowl = this.toHowl(bank.snarl);
     const playId = this.play(bank.snarl, x, y);
     // length ~5000 ms
     const offset = random(0, 3.0);
-    const speed = random(0.7, 1.5);
+    const speed = random(0.8, 2.0);
     // console.log("windseek", offset, playId);
-    bank.snarl.seek(offset, playId);
-    bank.snarl.rate(speed, playId);
+    // soundHowl.seek(offset, playId);
+    soundHowl.rate(speed, playId);
+    soundHowl.loop(true, playId);
+    soundHowl.volume(0.5, playId);
   }
 
   listenerPos(x, y) {

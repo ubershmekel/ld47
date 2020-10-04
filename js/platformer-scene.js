@@ -125,7 +125,7 @@ export default class PlatformerScene extends Phaser.Scene {
         if (tile) { 
           console.log("play!")
           tile.setCollision(true);
-          this.sounds.play(bank.look, worldPoint.x, worldPoint.y);
+          this.sounds.play(bank.sounds, worldPoint.x, worldPoint.y);
         } else {
           // clicked outside of the game area
         }

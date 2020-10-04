@@ -1,0 +1,22 @@
+{
+  "name": "ld47",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "build-sounds": "node js/build-sounds.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ubershmekel/ld47.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ubershmekel/ld47/issues"
+  },
+  "homepage": "https://github.com/ubershmekel/ld47#readme",
+  "dependencies": {
+    "audiosprite": "^0.7.2"
+  }
+}
