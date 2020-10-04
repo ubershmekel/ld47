@@ -1,5 +1,7 @@
 const audiosprite = require('audiosprite');
 const fs = require('fs');
+const pathToFfmpeg = require('ffmpeg-static');
+console.log("pathToFfmpeg", pathToFfmpeg);
 
 const root = './assets/audio/';
 const outDir = './dist/'
