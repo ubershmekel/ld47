@@ -30,6 +30,9 @@ export default class Player {
       .setSize(18, 24)
       .setOffset(7, 9);
 
+    // for debugging
+    window.sprite = this.sprite;
+
     // Track the arrow keys & WASD
     const { LEFT, RIGHT, UP, W, A, D } = Phaser.Input.Keyboard.KeyCodes;
     this.keys = scene.input.keyboard.addKeys({

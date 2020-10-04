@@ -1,6 +1,6 @@
 import Player from "./player.js";
 import MouseTileMarker from "./mouse-tile-maker.js";
-import Sounds from "./sounds.js";
+import { Sounds, bank } from "./sounds.js";
 
 /**
  * A class that extends Phaser.Scene and wraps up the core logic for the platformer level.
@@ -32,6 +32,15 @@ export default class PlatformerScene extends Phaser.Scene {
     map.createDynamicLayer("Background", tiles);
     this.groundLayer = map.createDynamicLayer("Ground", tiles);
     map.createDynamicLayer("Foreground", tiles);
+    
+    const wind = map.createDynamicLayer("Wind", tiles);
+    wind.forEachTile(tile => {
+      if (tile.index === -1) {
+        return;
+      }
+      this.sounds.playWind(tile.pixelX, tile.pixelY);
+      // console.log("wind", tile);
+    });
 
     // Instantiate a player instance at the location of the "Spawn Point" object in the Tiled map
     const spawnPoint = map.findObject("Objects", obj => obj.name === "Spawn Point");
@@ -84,9 +93,9 @@ export default class PlatformerScene extends Phaser.Scene {
     this.marker.update();
     this.player.update();
 
-    if (this.sounds.bank.look._sounds[0]._panner) {
+    // if (this.sounds.bank.look._sounds[0]._panner) {
       // console.log("soundx", this.sounds.bank.look._sounds[0]._panner.positionX.value, Howler.ctx.listener.positionX.value);
-    }
+    //}
     
     // audio position
     this.sounds.listenerPos(this.player.sprite.x, this.player.sprite.y);
@@ -101,7 +110,7 @@ export default class PlatformerScene extends Phaser.Scene {
         if (tile) { 
           console.log("play!")
           tile.setCollision(true);
-          this.sounds.play(this.sounds.bank.look, worldPoint.x, worldPoint.y);
+          this.sounds.play(bank.look, worldPoint.x, worldPoint.y);
         } else {
           // clicked outside of the game area
         }
@@ -117,13 +126,17 @@ export default class PlatformerScene extends Phaser.Scene {
 
       const cam = this.cameras.main;
       cam.shake(100, 0.05);
-      cam.fade(250, 0, 0, 0);
+      cam.fade(500, 0, 0, 0);
 
       // Freeze the player to leave them on screen while fading but remove the marker immediately
       this.player.freeze();
       this.marker.destroy();
 
+
       cam.once("camerafadeoutcomplete", () => {
+        // Howler.unload clears the cache, causing all files to redownload
+        // Howler.unload();
+        Howler.stop();
         this.player.destroy();
         this.scene.restart();
       });
