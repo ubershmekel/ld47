@@ -117,21 +117,24 @@ export default class Player {
 
     // is on ledge?
     const tile = this.scene.groundLayer.getTileAtWorldXY(sprite.x, sprite.y, true);
-    const underRight = this.scene.groundLayer.getTileAt(tile.x + 1, tile.y + 1, true);
-    const underJust = this.scene.groundLayer.getTileAt(tile.x, tile.y + 1, true);
-    const underLeft = this.scene.groundLayer.getTileAt(tile.x - 1, tile.y + 1, true);
-    // console.log('tilexy', tile.x, tile.y, underLeft.index, underJust.index, underRight.index);
-    if (onGround && underJust.index === -1) {
-      // a few pixels from falling
-      if (underRight.index !== -1) {
-        this.scene.sounds.playCliffOnLeft();
-      } else if (underLeft.index !== -1) {
-        this.scene.sounds.playCliffOnRight();
+    if (tile) {
+      const underRight = this.scene.groundLayer.getTileAt(tile.x + 1, tile.y + 1, true);
+      const underJust = this.scene.groundLayer.getTileAt(tile.x, tile.y + 1, true);
+      const underLeft = this.scene.groundLayer.getTileAt(tile.x - 1, tile.y + 1, true);
+      // console.log('tilexy', tile.x, tile.y, underLeft.index, underJust.index, underRight.index);
+      if (onGround && underJust.index === -1) {
+        // a few pixels from falling
+        if (underRight.index !== -1) {
+          this.scene.sounds.playCliffOnLeft();
+        } else if (underLeft.index !== -1) {
+          this.scene.sounds.playCliffOnRight();
+        }
+      } else {
+        this.scene.sounds.playNoCliff();
       }
-    } else {
-      this.scene.sounds.playNoCliff();
     }
 
+    // BUMP SOUNDS
     if (sprite.body.blocked.up) {
       this.scene.sounds.playBumpTop();
     }

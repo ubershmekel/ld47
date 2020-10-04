@@ -18,6 +18,10 @@ const ledgeX = {
   endGame: 0,
 }
 
+let counter = {
+  death: 0,
+}
+
 /**
  * A class that extends Phaser.Scene and wraps up the core logic for the platformer level.
  */
@@ -124,13 +128,13 @@ export default class PlatformerScene extends Phaser.Scene {
       })
       .setScrollFactor(0);
 
-    this.time.delayedCall(3000, () => {
+    this.time.delayedCall(500, () => {
       this.sounds.say(bank.hey_buddy);
     })
     
     
     // Block view, we are blind
-    // this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
+    this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
   }
 
   placeDebugTile(worldPoint) {
@@ -153,6 +157,12 @@ export default class PlatformerScene extends Phaser.Scene {
     const x = this.player.sprite.x;
     if (x > ledgeX.endGame) {
       this.sounds.say(bank.ending);
+    } else if (x > ledgeX.ledge3) {
+      this.sounds.say(bank.why_climb);
+    } else if (x > ledgeX.ledge2) {
+      this.sounds.say(bank.ice_cream);
+    } else if (x > ledgeX.ledge1) {
+      this.sounds.say(bank.comfy_wall);
     }
   }
 
@@ -184,6 +194,10 @@ export default class PlatformerScene extends Phaser.Scene {
     ) {
       // Flag that the player is dead so that we can stop update from running in the future
       this.isPlayerDead = true;
+      counter.death += 1;
+      if (1 <= counter.death && counter.death <= 3) {
+        this.sounds.say('back_to_start_' + counter.death);
+      }
 
       const cam = this.cameras.main;
       cam.shake(100, 0.05);
@@ -198,7 +212,7 @@ export default class PlatformerScene extends Phaser.Scene {
       cam.once("camerafadeoutcomplete", () => {
         // Howler.unload clears the cache, causing all files to redownload
         // Howler.unload();
-        Howler.stop();
+        // Howler.stop();
 
         this.player.destroy();
         this.scene.restart();

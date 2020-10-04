@@ -71,8 +71,6 @@ const globalStates = {};
 const sayQ = [];
 
 export class Sounds {
-  states = {};
-
   constructor() {
     if (!bank) {
       loadBank();
@@ -114,60 +112,60 @@ export class Sounds {
   }
 
   touchRightOn() {
-    if (this.states.touchRight) {
+    if (globalStates.touchRight) {
       return;
     }
     const playId = this.play("wall-touch-1");
     soundh.volume(0.1, playId);
     soundh.stereo(1.0, playId);
     soundh.loop(true, playId);
-    this.states.touchRight = playId;
+    globalStates.touchRight = playId;
   }
 
   touchRightOff() {
-    if (!this.states.touchRight) {
+    if (!globalStates.touchRight) {
       return;
     }
-    soundh.stop(this.states.touchRight);
-    delete this.states.touchRight;
+    soundh.stop(globalStates.touchRight);
+    delete globalStates.touchRight;
   }
 
   touchLeftOn() {
-    if (this.states.touchLeft) {
+    if (globalStates.touchLeft) {
       return;
     }
     const playId = this.play("wall-touch-1");
     soundh.volume(0.1, playId);
     soundh.stereo(-1.0, playId);
     soundh.loop(true, playId);
-    this.states.touchLeft = playId;
+    globalStates.touchLeft = playId;
   }
 
   touchLeftOff() {
-    if (!this.states.touchLeft) {
+    if (!globalStates.touchLeft) {
       return;
     }
-    soundh.stop(this.states.touchLeft);
-    delete this.states.touchLeft;
+    soundh.stop(globalStates.touchLeft);
+    delete globalStates.touchLeft;
   }
 
   walkingOn() {
-    if (this.states.walking) {
+    if (globalStates.walking) {
       return;
     }
     const playId = this.play("step-1");
     soundh.volume(0.1, playId);
     soundh.stereo(0, playId);
     soundh.loop(true, playId);
-    this.states.walking = playId;
+    globalStates.walking = playId;
   }
 
   walkingOff() {
-    if (!this.states.walking) {
+    if (!globalStates.walking) {
       return;
     }
-    soundh.stop(this.states.walking);
-    delete this.states.walking;
+    soundh.stop(globalStates.walking);
+    delete globalStates.walking;
   }
 
   playLanded() {
@@ -185,12 +183,12 @@ export class Sounds {
   playFlying(intensity) {
     // intensity 0.0 - 1.0
     // console.log("fly intensity", intensity);
-    if (this.states.flying) {
-      soundh.volume(intensity, this.states.flying);
+    if (globalStates.flying) {
+      soundh.volume(intensity, globalStates.flying);
       return;
     }
     const playId = this.play("fly");
-    this.states.flying = playId;
+    globalStates.flying = playId;
     soundh.volume(intensity, playId);
     soundh.rate(0.5, playId);
     soundh.stereo(0, playId);
@@ -246,7 +244,7 @@ export class Sounds {
       globalStates['said'] = {};
     }
     if (globalStates['said'][line]) {
-      console.log("already said line", line);
+      // console.log("already said line", line);
       return;
     } else {
       globalStates['said'][line] = true;
