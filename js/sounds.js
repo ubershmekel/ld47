@@ -5,6 +5,7 @@ export const bank = {
 }
 
 const distanceVolumeOne = 32;
+let sayingNowId = 0;
 
 function loadSound(options) {
   console.log('sound options', options);
@@ -64,6 +65,10 @@ const soundh = loadSound(soundData);
   //   // loop: true,
   // });
 // }
+
+// the member `states` gets reset every scene reset
+const globalStates = {};
+const sayQ = [];
 
 export class Sounds {
   states = {};
@@ -227,6 +232,46 @@ export class Sounds {
     // console.log("listenerPos", x, y);
     Howler.pos(x, y, 0);
   }
+
+  doOnce(key, func) {
+    if (globalStates[key]) {
+      return;
+    }
+    globalStates[key] = true;
+    func();
+  }
+
+  say(line) {
+    if (!globalStates['said']) {
+      globalStates['said'] = {};
+    }
+    if (globalStates['said'][line]) {
+      console.log("already said line", line);
+      return;
+    } else {
+      globalStates['said'][line] = true;
+    }
+
+    sayQ.push(line);
+    this.checkSayQ();
+  }
+
+  checkSayQ() {
+    if (sayQ.length == 0) {
+      return;
+    }
+    if (sayingNowId) {
+      const isSayingSomething = soundh.playing(sayingNowId);
+      if (isSayingSomething) {
+        soundh.on('end', this.checkSayQ, sayingNowId);
+        return;
+      }
+    }
+    const line = sayQ.shift();
+    sayingNowId = this.play(line);
+    soundh.volume(0.4, sayingNowId);
+
+  }
 }
 
 
@@ -263,10 +308,10 @@ var fade = (function() {
 }());
 
 export function fadeIn() {
-  return fade(Howler, 1, 200);
+  // return fade(Howler, 1, 200);
 }
 
 export function fadeOut() {
-  return fade(Howler, 0, 200);
+  // return fade(Howler, 0, 200);
 }
 

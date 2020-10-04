@@ -37,6 +37,13 @@ document.body.addEventListener('click', function() {
   // });
 });
 
-
-
+// Allow users to cheat by just typing "cheat" into the console
+window.cheat = new Image();
+Object.defineProperty(window.cheat, 'id', {
+  get: function() {
+    window.scene.viewBlock.visible = false
+  }
+});
+// `cheaa` prevents `cheat` from auto-completing after `ch`
+window.cheaa = null;
 

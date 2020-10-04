@@ -6,6 +6,16 @@ const tileIndex = {
   wind: 342,
   snake: 330,
   endGame: 317,
+  ledge1: 325,
+  ledge2: 326,
+  ledge3: 327,
+}
+
+const ledgeX = {
+  ledge1: 0,
+  ledge2: 0,
+  ledge3: 0,
+  endGame: 0,
 }
 
 /**
@@ -47,17 +57,27 @@ export default class PlatformerScene extends Phaser.Scene {
     map.createDynamicLayer("Foreground", tiles);
     
     const wind = map.createStaticLayer("Spawns", tiles);
-    wind.forEachTile(tile => {
-      if (tile.index === -1) {
-        return;
-      }
-      if (tile.index === tileIndex.wind) {
-        this.sounds.playWind(tile.pixelX, tile.pixelY);
-      } else if (tile.index === tileIndex.snake) {
-        this.sounds.playSnarl(tile.pixelX, tile.pixelY);
-      } else{
-        console.log("unknown spawn type", tile.index);
-      }
+    this.sounds.doOnce('setup-grid-sounds', () => {
+      wind.forEachTile(tile => {
+        if (tile.index === -1) {
+          return;
+        }
+        if (tile.index === tileIndex.wind) {
+          this.sounds.playWind(tile.pixelX, tile.pixelY);
+        } else if (tile.index === tileIndex.snake) {
+          this.sounds.playSnarl(tile.pixelX, tile.pixelY);
+        } else if (tile.index === tileIndex.ledge1) {
+          ledgeX.ledge1 = tile.pixelX;
+        } else if (tile.index === tileIndex.ledge2) {
+          ledgeX.ledge2 = tile.pixelX;
+        } else if (tile.index === tileIndex.ledge3) {
+          ledgeX.ledge3 = tile.pixelX;
+        } else if (tile.index === tileIndex.endGame) {
+          ledgeX.endGame = tile.pixelX;
+        } else {
+          console.log("unknown spawn type", tile.index, tile.pixelX);
+        }
+      });
     });
 
     // Instantiate a player instance at the location of the "Spawn Point" object in the Tiled map
@@ -104,7 +124,13 @@ export default class PlatformerScene extends Phaser.Scene {
       })
       .setScrollFactor(0);
 
-    this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
+    this.time.delayedCall(3000, () => {
+      this.sounds.say(bank.hey_buddy);
+    })
+    
+    
+    // Block view, we are blind
+    // this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
   }
 
   placeDebugTile(worldPoint) {
@@ -123,11 +149,20 @@ export default class PlatformerScene extends Phaser.Scene {
     } 
   }
 
+  checkLedgeProgress() {
+    const x = this.player.sprite.x;
+    if (x > ledgeX.endGame) {
+      this.sounds.say(bank.ending);
+    }
+  }
+
   update(time, delta) {
     if (this.isPlayerDead) return;
 
     this.marker.update();
     this.player.update();
+
+    this.checkLedgeProgress();
 
     // if (this.sounds.bank.look._sounds[0]._panner) {
       // console.log("soundx", this.sounds.bank.look._sounds[0]._panner.positionX.value, Howler.ctx.listener.positionX.value);
