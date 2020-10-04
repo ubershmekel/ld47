@@ -153,6 +153,9 @@ export class Sounds {
     if (rate < 0.5) {
       rate = 0.5;
     }
+    if (rate > 1.0) {
+      rate = 1.0;
+    }
     if (globalStates.walking) {
       // console.log("walk rate", rate);
       soundh.rate(rate, globalStates.walking);

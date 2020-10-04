@@ -1,6 +1,7 @@
 import Player from "./player.js";
 import MouseTileMarker from "./mouse-tile-maker.js";
 import { Sounds, bank, fadeOut, fadeIn } from "./sounds.js";
+import { counter } from "./utils.js";
 
 const tileIndex = {
   wind: 342,
@@ -16,10 +17,6 @@ const ledgeX = {
   ledge2: 0,
   ledge3: 0,
   endGame: 0,
-}
-
-let counter = {
-  death: 0,
 }
 
 /**
@@ -194,10 +191,11 @@ export default class PlatformerScene extends Phaser.Scene {
     ) {
       // Flag that the player is dead so that we can stop update from running in the future
       this.isPlayerDead = true;
+
       counter.death += 1;
-      if (1 <= counter.death && counter.death <= 3) {
-        this.sounds.say('back_to_start_' + counter.death);
-      }
+      const deathVariation = (counter.death % 3) + 1;
+      this.sounds.say('back_to_start_' + deathVariation.death);
+      console.log("counters", counter);
 
       const cam = this.cameras.main;
       cam.shake(100, 0.05);

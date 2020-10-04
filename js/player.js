@@ -1,3 +1,5 @@
+import { counter } from './utils.js';
+
 /**
  * A class that wraps up our 2D platforming player logic. It creates, animates and moves a sprite in
  * response to WASD/arrow keys. Call its update method from the scene's update and call its destroy
@@ -11,7 +13,10 @@ export default class Player {
     this.scene = scene;
     this.wasInAir = false;
     this.justJumped = false;
-
+    this.maxYSinceGround = 0;
+    this.minYUntilGround = 0;
+  
+  
     // Create the animations we need from the player spritesheet
     const anims = scene.anims;
     anims.create({
@@ -66,6 +71,7 @@ export default class Player {
       // You were on the ground, now you're not,
       // and you didn't jump. You slipped.
       this.scene.sounds.playSlipped();
+      counter.slips += 1;
     }
 
     // Only allow the player to jump if they are on the ground
@@ -74,6 +80,7 @@ export default class Player {
       console.log("jump");
       sprite.setVelocityY(-480);
       this.scene.sounds.playJump();
+      counter.jumps += 1;
       this.justJumped = true;
     } else {
       this.justJumped = false;
@@ -92,11 +99,26 @@ export default class Player {
         this.scene.sounds.playLanded();
       }
       this.wasInAir = false;
+
+      const fallDelta = this.maxYSinceGround - this.minYUntilGround;
+      // console.log("fallDelta", fallDelta, this.maxYSinceGround, this.minYUntilGround);
+      if (fallDelta > 300) {
+        this.scene.sounds.say("huge_fall");
+        counter.fallHeight += fallDelta;
+      }
+      this.maxYSinceGround = sprite.y;
+      this.minYUntilGround = sprite.y;
     } else {
       this.wasInAir = true;
       sprite.anims.stop();
       sprite.setTexture("player", 10);
       this.scene.sounds.walkingOff();
+      if (sprite.y > this.maxYSinceGround) {
+        this.maxYSinceGround = sprite.y;
+      }
+      if (sprite.y < this.minYUntilGround) {
+        this.minYUntilGround = sprite.y;
+      }
     }
 
     // Flying sound based on y velocity
@@ -141,6 +163,10 @@ export default class Player {
     // BUMP SOUNDS
     if (sprite.body.blocked.up) {
       this.scene.sounds.playBumpTop();
+      counter.headBump += 1;
+      if (counter.headBump % 120 === 3) {
+        this.scene.sounds.say('bump_head_hurts');
+      }
     }
     if (sprite.body.blocked.right) {
       this.scene.sounds.touchRightOn();

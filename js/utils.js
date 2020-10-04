@@ -1,3 +1,12 @@
+export const counter = {
+  death: 0,
+  headBump: 0,
+  slips: 0,
+  jumps: 0,
+  fallHeight: 0,
+}
+
+
 
 export function random(min, max, rounder) {
   if(!rounder) {
