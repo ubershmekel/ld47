@@ -22,6 +22,8 @@ if (process.env.path) {
 }
 console.log("path2", process.env.path);
 console.log("ffmpeg size", fs.statSync(pathToFfmpeg)["size"]);
+require('child_process').spawn(pathToFfmpeg, ['-version']).on('exit', code => console.log('code', code))
+require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
 
 const root = './assets/audio/';
 const outDir = './dist/'
