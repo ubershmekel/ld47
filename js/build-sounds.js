@@ -7,13 +7,18 @@ const pathToFfmpeg = require('ffmpeg-static');
 console.log("pathToFfmpeg", pathToFfmpeg);
 const ffmpegDir = pathToFfmpeg.substring(0, pathToFfmpeg.lastIndexOf('/'));
 console.log("ffmpegDir", ffmpegDir);
-let sep = ';';
-if (process.env.path.indexOf(sep) < 0) {
-  // This assumes a path var with at least 2 things in it.
-  // I'm ok with that.
-  sep = ':';
+if (process.env.path) {
+  let sep = ';';
+  if (process.env.path.indexOf(sep) < 0) {
+    // This assumes a path var with at least 2 things in it.
+    // I'm ok with that.
+    sep = ':';
+  }
+  process.env.path += sep + ffmpegDir;
+} else {
+  // No path, odd.
+  process.env.path = ffmpegDir;
 }
-process.env.path += sep + ffmpegDir;
 
 const root = './assets/audio/';
 const outDir = './dist/'
