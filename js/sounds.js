@@ -248,7 +248,13 @@ export class Sounds {
     func();
   }
 
+  sayAnyway(line) {
+    sayQ.push(line);
+    this.checkSayQ();
+  }
+
   say(line) {
+    // this `say` makes sure we never repeat a line.
     if (!globalStates['said']) {
       globalStates['said'] = {};
     }
@@ -258,9 +264,7 @@ export class Sounds {
     } else {
       globalStates['said'][line] = true;
     }
-
-    sayQ.push(line);
-    this.checkSayQ();
+    this.sayAnyway(line);
   }
 
   checkSayQ() {
@@ -270,7 +274,7 @@ export class Sounds {
     if (sayingNowId) {
       const isSayingSomething = soundh.playing(sayingNowId);
       if (isSayingSomething) {
-        soundh.on('end', this.checkSayQ, sayingNowId);
+        // soundh.on('end', this.checkSayQ, sayingNowId);
         return;
       }
     }
@@ -308,6 +312,13 @@ export class Sounds {
     const playId = this.play(bank.rocks_1);
     soundh.volume(0.3, playId);
     soundh.stereo(side, playId);
+  }
+
+  playLoveWalls() {
+    this.doOnce('love-walls', () => {
+      const playId = this.play(bank.love_wall);
+      soundh.volume(0.3, playId);
+    });
   }
 
 }

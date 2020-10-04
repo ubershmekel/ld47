@@ -163,11 +163,12 @@ export default class PlatformerScene extends Phaser.Scene {
     }
   }
 
-  update(time, delta) {
+  update(time, deltaMs) {
     if (this.isPlayerDead) return;
 
     this.marker.update();
-    this.player.update();
+    this.player.update(time, deltaMs);
+    this.sounds.checkSayQ();
 
     this.checkLedgeProgress();
 
@@ -194,7 +195,7 @@ export default class PlatformerScene extends Phaser.Scene {
 
       counter.death += 1;
       const deathVariation = (counter.death % 3) + 1;
-      this.sounds.say('back_to_start_' + deathVariation.death);
+      this.sounds.sayAnyway('back_to_start_' + deathVariation);
       console.log("counters", counter);
 
       const cam = this.cameras.main;

@@ -59,7 +59,7 @@ export default class Player {
     this.sprite.body.moves = false;
   }
 
-  update() {
+  update(time, deltaMs) {
     const { keys, sprite } = this;
     const onGround = sprite.body.blocked.down;
     // const acceleration = onGround ? 600 : 200;
@@ -170,13 +170,19 @@ export default class Player {
     }
     if (sprite.body.blocked.right) {
       this.scene.sounds.touchRightOn();
+      counter.wallHugMs += deltaMs;
     } else {
       this.scene.sounds.touchRightOff();
     }
     if (sprite.body.blocked.left) {
       this.scene.sounds.touchLeftOn();
+      counter.wallHugMs += deltaMs;
     } else {
       this.scene.sounds.touchLeftOff();
+    }
+
+    if (counter.wallHugMs > 5000) {
+      this.scene.sounds.playLoveWalls();
     }
   }
 
