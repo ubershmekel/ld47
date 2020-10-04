@@ -7,6 +7,7 @@ const pathToFfmpeg = require('ffmpeg-static');
 console.log("pathToFfmpeg", pathToFfmpeg);
 const ffmpegDir = pathToFfmpeg.substring(0, pathToFfmpeg.lastIndexOf('/'));
 console.log("ffmpegDir", ffmpegDir);
+console.log("path", process.env.path);
 if (process.env.path) {
   let sep = ';';
   if (process.env.path.indexOf(sep) < 0) {
@@ -19,6 +20,8 @@ if (process.env.path) {
   // No path, odd.
   process.env.path = ffmpegDir;
 }
+console.log("path2", process.env.path);
+console.log("ffmpeg size", fs.statSync(pathToFfmpeg)["size"]);
 
 const root = './assets/audio/';
 const outDir = './dist/'
@@ -30,11 +33,11 @@ console.log("listdir", files)
 var opts = {
   output: outDir + 'soundsprites',
   format: 'howler2',
-  // logger: {
-  //   debug: console.log,
-  //   info: console.log,
-  //   log: console.log,
-  // }
+  logger: {
+    debug: console.log,
+    info: console.log,
+    log: console.log,
+  }
 }
 
 process.env.path += ' /opt/build/repo/node_modules/ffmpeg-static/'
