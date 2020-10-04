@@ -41,18 +41,18 @@ var opts = {
 }
 
 require('child_process').spawn(pathToFfmpeg, ['-version']).on('exit', code => console.log('code1', code))
-require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
+// require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
 
-audiosprite(files, opts, function(err, obj) {
-  if (err) return console.error(err)
+// audiosprite(files, opts, function(err, obj) {
+//   if (err) return console.error(err)
 
-  const dataText = 'export default ' + JSON.stringify(obj, null, 2);
+//   const dataText = 'export default ' + JSON.stringify(obj, null, 2);
 
-  // console.log(JSON.stringify(obj, null, 2))
-  fs.writeFile(outDir + "soundData.js", dataText, function(err) {
-    if (err) {
-      throw err;
-    }
-    console.log('complete');
-  });
-})
+//   // console.log(JSON.stringify(obj, null, 2))
+//   fs.writeFile(outDir + "soundData.js", dataText, function(err) {
+//     if (err) {
+//       throw err;
+//     }
+//     console.log('complete');
+//   });
+// })
