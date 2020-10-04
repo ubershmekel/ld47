@@ -42,6 +42,7 @@ window.cheat = new Image();
 Object.defineProperty(window.cheat, 'id', {
   get: function() {
     window.scene.viewBlock.visible = false
+    window.activateCheat = true;
   }
 });
 // `cheaa` prevents `cheat` from auto-completing after `ch`

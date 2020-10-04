@@ -136,7 +136,9 @@ export default class PlatformerScene extends Phaser.Scene {
     
     
     // Block view, we are blind
-    this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
+    if (!window.activateCheat) {
+      this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
+    }
   }
 
   placeDebugTile(worldPoint) {
