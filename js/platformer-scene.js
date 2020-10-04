@@ -1,6 +1,11 @@
 import Player from "./player.js";
 import MouseTileMarker from "./mouse-tile-maker.js";
-import { Sounds, bank } from "./sounds.js";
+import { Sounds, bank, fadeOut, fadeIn } from "./sounds.js";
+
+const tileIndex = {
+  wind: 342,
+  snake: 330,
+}
 
 /**
  * A class that extends Phaser.Scene and wraps up the core logic for the platformer level.
@@ -24,6 +29,9 @@ export default class PlatformerScene extends Phaser.Scene {
   }
 
   create() {
+    console.log("scene create()");
+    fadeIn();
+
     this.isPlayerDead = false;
 
     const map = this.make.tilemap({ key: "map" });
@@ -33,13 +41,18 @@ export default class PlatformerScene extends Phaser.Scene {
     this.groundLayer = map.createDynamicLayer("Ground", tiles);
     map.createDynamicLayer("Foreground", tiles);
     
-    const wind = map.createDynamicLayer("Wind", tiles);
+    const wind = map.createStaticLayer("Spawns", tiles);
     wind.forEachTile(tile => {
       if (tile.index === -1) {
         return;
       }
-      this.sounds.playWind(tile.pixelX, tile.pixelY);
-      // console.log("wind", tile);
+      if (tile.index === tileIndex.wind) {
+        this.sounds.playWind(tile.pixelX, tile.pixelY);
+      }
+      if (tile.index === tileIndex.snake) {
+        this.sounds.playSnarl(tile.pixelX, tile.pixelY);
+      }
+      // console.log("wind", tile.index);
     });
 
     // Instantiate a player instance at the location of the "Spawn Point" object in the Tiled map
@@ -85,6 +98,8 @@ export default class PlatformerScene extends Phaser.Scene {
         backgroundColor: "#ffffff"
       })
       .setScrollFactor(0);
+
+    // this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
   }
 
   update(time, delta) {
@@ -132,11 +147,13 @@ export default class PlatformerScene extends Phaser.Scene {
       this.player.freeze();
       this.marker.destroy();
 
+      fadeOut()
 
       cam.once("camerafadeoutcomplete", () => {
         // Howler.unload clears the cache, causing all files to redownload
         // Howler.unload();
         Howler.stop();
+
         this.player.destroy();
         this.scene.restart();
       });
