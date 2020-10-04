@@ -17,6 +17,7 @@ const ledgeX = {
   ledge2: 0,
   ledge3: 0,
   endGame: 0,
+  firstSnake: 0,
 }
 
 /**
@@ -59,6 +60,7 @@ export default class PlatformerScene extends Phaser.Scene {
     
     const wind = map.createStaticLayer("Spawns", tiles);
     this.sounds.doOnce('setup-grid-sounds', () => {
+      ledgeX.firstSnake = 99999;
       wind.forEachTile(tile => {
         if (tile.index === -1) {
           return;
@@ -67,6 +69,9 @@ export default class PlatformerScene extends Phaser.Scene {
           this.sounds.playWind(tile.pixelX, tile.pixelY);
         } else if (tile.index === tileIndex.snake) {
           this.sounds.playSnarl(tile.pixelX, tile.pixelY);
+          if (tile.pixelX < ledgeX.firstSnake) {
+            ledgeX.firstSnake = tile.pixelX;
+          }
         } else if (tile.index === tileIndex.ledge1) {
           ledgeX.ledge1 = tile.pixelX;
         } else if (tile.index === tileIndex.ledge2) {
@@ -155,11 +160,13 @@ export default class PlatformerScene extends Phaser.Scene {
     if (x > ledgeX.endGame) {
       this.sounds.say(bank.ending);
     } else if (x > ledgeX.ledge3) {
-      this.sounds.say(bank.why_climb);
+      this.sounds.say(bank.climb_up_dont_leave);
+    } else if (x > ledgeX.firstSnake) {
+      this.sounds.say(bank.dont_step_on_snakes);
     } else if (x > ledgeX.ledge2) {
-      this.sounds.say(bank.ice_cream);
+      this.sounds.say(bank.got_over_pit);
     } else if (x > ledgeX.ledge1) {
-      this.sounds.say(bank.comfy_wall);
+      this.sounds.say(bank.wow_ledge);
     }
   }
 

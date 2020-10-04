@@ -4,7 +4,8 @@ export const counter = {
   slips: 0,
   jumps: 0,
   fallHeight: 0,
-  wallHugMs: 0,
+  wallHugRightMs: 0,
+  wallHugLeftMs: 0,
 }
 
 window.counter = counter;

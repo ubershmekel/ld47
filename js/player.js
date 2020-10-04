@@ -169,19 +169,22 @@ export default class Player {
     }
     if (sprite.body.blocked.right) {
       this.scene.sounds.touchRightOn();
-      counter.wallHugMs += deltaMs;
+      counter.wallHugRightMs += deltaMs;
     } else {
       this.scene.sounds.touchRightOff();
     }
     if (sprite.body.blocked.left) {
       this.scene.sounds.touchLeftOn();
-      counter.wallHugMs += deltaMs;
+      counter.wallHugLeftMs += deltaMs;
     } else {
       this.scene.sounds.touchLeftOff();
     }
 
-    if (counter.wallHugMs > 5000) {
-      this.scene.sounds.playLoveWalls();
+    if (counter.wallHugRightMs > 7000) {
+      this.scene.sounds.say('love_wall_right');
+    }
+    if (counter.wallHugLeftMs > 7000) {
+      this.scene.sounds.say('love_wall_left');
     }
   }
 
