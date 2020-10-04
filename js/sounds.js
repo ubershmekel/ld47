@@ -37,33 +37,33 @@ const soundh = loadSound(soundData);
 // export let bank = null;
 
 // function loadBank() {
-  // bank = {};
+// bank = {};
 
-  // Howler.pos(this.x, this.y, -0.5);
+// Howler.pos(this.x, this.y, -0.5);
 
-  // bank.wind = loadSound({
-  //   src: ['../assets/audio/wind.mp3'],
-  //   loop: true,
-  //   volume: 0.5,
-  // });
+// bank.wind = loadSound({
+//   src: ['../assets/audio/wind.mp3'],
+//   loop: true,
+//   volume: 0.5,
+// });
 
-  // bank.snarl = loadSound({
-  //   src: ['../assets/audio/snarl.mp3'],
-  //   loop: true,
-  //   volume: 0.5,
-  // });
+// bank.snarl = loadSound({
+//   src: ['../assets/audio/snarl.mp3'],
+//   loop: true,
+//   volume: 0.5,
+// });
 
-  // bank.look = loadSound({
-  //   src: ['../assets/audio/sounds.mp3'],
-  //   // sprite: {
-  //   //   lightning: [2000, 4147],
-  //   //   rain: [8000, 9962, true],
-  //   //   thunder: [19000, 13858],
-  //   //   music: [34000, 31994, true]
-  //   // },
-  //   // volume: 0
-  //   // loop: true,
-  // });
+// bank.look = loadSound({
+//   src: ['../assets/audio/sounds.mp3'],
+//   // sprite: {
+//   //   lightning: [2000, 4147],
+//   //   rain: [8000, 9962, true],
+//   //   thunder: [19000, 13858],
+//   //   music: [34000, 31994, true]
+//   // },
+//   // volume: 0
+//   // loop: true,
+// });
 // }
 
 // the member `states` gets reset every scene reset
@@ -95,7 +95,7 @@ export class Sounds {
       // a spatial sound!
       soundHowl.pos(x, y, -distanceVolumeOne / 4, playId);
     }
-    
+
     console.log("sound at", soundName, x, y, playId, soundHowl._src);
     return playId;
   }
@@ -107,7 +107,7 @@ export class Sounds {
     }
     return soundh;
   }
-  
+
   playJump() {
     const playId = this.play("jump1");
     soundh.volume(0.1, playId);
@@ -270,8 +270,39 @@ export class Sounds {
     const line = sayQ.shift();
     sayingNowId = this.play(line);
     soundh.volume(0.4, sayingNowId);
-
   }
+
+  lastCliff = null;
+
+  playCliffOnLeft() {
+    this.playCliffOnSide(-1.0);
+  }
+
+  playCliffOnRight() {
+    this.playCliffOnSide(1.0);
+  }
+
+  playNoCliff() {
+    this.lastCliff = null;
+  }
+
+  playCliffOnSide(side) {
+    const now = new Date().getTime();
+    if (this.lastCliff) {
+      if (this.lastCliff === side) {
+        return;
+      }
+      // const delta = now - this.lastCliff;
+      // if (delta < 1500) {
+      //   return;
+      // }
+    }
+    this.lastCliff = side;
+    const playId = this.play(bank.rocks_1);
+    soundh.volume(0.3, playId);
+    soundh.stereo(side, playId);
+  }
+
 }
 
 
@@ -283,27 +314,27 @@ export class Sounds {
 *  @param time - time (in ms) for the fade to complete
 *  https://github.com/goldfire/howler.js/issues/1324
 **/
-var fade = (function() { 
+var fade = (function () {
   var intv;
 
-  return function(howl, targetVolume, time) {
-     clearInterval(intv);
+  return function (howl, targetVolume, time) {
+    clearInterval(intv);
 
-     var vol = howl.volume();
-     var delta = targetVolume - vol;
-     var intervalMs = 20;
-     var iterations = time / intervalMs;
-     var volumeStep = delta / iterations;
-     
-     intv = setInterval(function() {
-       iterations -= 1;
-       vol += volumeStep;
+    var vol = howl.volume();
+    var delta = targetVolume - vol;
+    var intervalMs = 20;
+    var iterations = time / intervalMs;
+    var volumeStep = delta / iterations;
+
+    intv = setInterval(function () {
+      iterations -= 1;
+      vol += volumeStep;
       //  console.log("fade step", vol);
-       howl.volume(vol);
-       if (iterations === 0) {
-         clearInterval(intv);
-       }
-     }, intervalMs);
+      howl.volume(vol);
+      if (iterations === 0) {
+        clearInterval(intv);
+      }
+    }, intervalMs);
   }
 }());
 
