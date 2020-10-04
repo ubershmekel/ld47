@@ -1,7 +1,19 @@
 const audiosprite = require('audiosprite');
 const fs = require('fs');
 const pathToFfmpeg = require('ffmpeg-static');
+
+// pathToFfmpeg /opt/build/repo/node_modules/ffmpeg-static/ffmpeg
+
 console.log("pathToFfmpeg", pathToFfmpeg);
+const ffmpegDir = pathToFfmpeg.substring(0, pathToFfmpeg.lastIndexOf('/'));
+console.log("ffmpegDir", ffmpegDir);
+let sep = ';';
+if (process.env.path.indexOf(sep) < 0) {
+  // This assumes a path var with at least 2 things in it.
+  // I'm ok with that.
+  sep = ':';
+}
+process.env.path += sep + ffmpegDir;
 
 const root = './assets/audio/';
 const outDir = './dist/'
@@ -19,6 +31,8 @@ var opts = {
   //   log: console.log,
   // }
 }
+
+process.env.path += ' /opt/build/repo/node_modules/ffmpeg-static/'
 
 audiosprite(files, opts, function(err, obj) {
   if (err) return console.error(err)
