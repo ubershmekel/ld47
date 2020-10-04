@@ -4,6 +4,7 @@
  * method when you're done with the player.
  */
 const maxVelocityY = 800;
+const maxVelocityX = 300;
 
 export default class Player {
   constructor(scene, x, y) {
@@ -30,7 +31,7 @@ export default class Player {
     this.sprite = scene.physics.add
       .sprite(x, y, "player", 0)
       .setDrag(1000, 0)
-      .setMaxVelocity(300, maxVelocityY)
+      .setMaxVelocity(maxVelocityX, maxVelocityY)
       .setSize(18, 24)
       .setOffset(7, 9);
 
@@ -56,24 +57,10 @@ export default class Player {
   update() {
     const { keys, sprite } = this;
     const onGround = sprite.body.blocked.down;
-    const acceleration = onGround ? 600 : 200;
+    // const acceleration = onGround ? 600 : 200;
+    const acceleration = 600;
     // console.log("sprite xy", this.sprite.x, this.sprite.y);
     //Howler.pos(this.sprite.x, this.sprite.y, 0);
-
-    // Apply horizontal acceleration when left/a or right/d are applied
-    if (keys.left.isDown || keys.a.isDown) {
-      // 👈
-      sprite.setAccelerationX(-acceleration);
-      // No need to have a separate set of graphics for running to the left & to the right. Instead
-      // we can just mirror the sprite.
-      sprite.setFlipX(true);
-    } else if (keys.right.isDown || keys.d.isDown) {
-      // 👉
-      sprite.setAccelerationX(acceleration);
-      sprite.setFlipX(false);
-    } else {
-      sprite.setAccelerationX(0);
-    }
 
     if (!onGround && !this.wasInAir && !this.justJumped) {
       // You were on the ground, now you're not,
@@ -96,7 +83,7 @@ export default class Player {
     if (onGround) {
       if (sprite.body.velocity.x !== 0) {
         sprite.anims.play("player-run", true);
-        this.scene.sounds.walkingOn();
+        this.scene.sounds.walkingOn(Math.abs(sprite.body.velocity.x / maxVelocityX));
       } else {
         sprite.anims.play("player-idle", true);
         this.scene.sounds.walkingOff();
@@ -132,6 +119,23 @@ export default class Player {
       } else {
         this.scene.sounds.playNoCliff();
       }
+    }
+
+    // Apply horizontal acceleration when left/a or right/d are applied
+    if (keys.left.isDown || keys.a.isDown) {
+      // 👈
+      sprite.setAccelerationX(-acceleration);
+      // sprite.setVelocityX(-130);
+      // No need to have a separate set of graphics for running to the left & to the right. Instead
+      // we can just mirror the sprite.
+      sprite.setFlipX(true);
+    } else if (keys.right.isDown || keys.d.isDown) {
+      // 👉
+      // sprite.setVelocityX(130);
+      sprite.setAccelerationX(acceleration);
+      sprite.setFlipX(false);
+    } else {
+      sprite.setAccelerationX(0);
     }
 
     // BUMP SOUNDS

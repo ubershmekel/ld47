@@ -149,11 +149,17 @@ export class Sounds {
     delete globalStates.touchLeft;
   }
 
-  walkingOn() {
+  walkingOn(rate) {
+    if (rate < 0.5) {
+      rate = 0.5;
+    }
     if (globalStates.walking) {
+      // console.log("walk rate", rate);
+      soundh.rate(rate, globalStates.walking);
       return;
     }
     const playId = this.play("step-1");
+    soundh.rate(rate, playId);
     soundh.volume(0.1, playId);
     soundh.stereo(0, playId);
     soundh.loop(true, playId);
@@ -197,7 +203,7 @@ export class Sounds {
 
   playBumpTop() {
     const playId = this.play("bump-top-1");
-    soundh.volume(0.05, playId);
+    soundh.volume(0.15, playId);
   }
 
   playWind(x, y) {
