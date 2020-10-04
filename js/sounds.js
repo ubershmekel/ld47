@@ -8,19 +8,19 @@ const distanceVolumeOne = 32;
 
 function loadSound(options) {
   console.log('sound options', options);
-  const sound = new Howl(options);
-  sound.pannerAttr().refDistance = distanceVolumeOne;
-  sound.pannerAttr().maxDistance = 300;
-  // sound.pannerAttr().distanceModel = 'linear';
-  sound.pannerAttr().distanceModel = 'exponential';
-  sound.pannerAttr().rolloffFactor = 2.4;
-  // sound.pannerAttr().distanceModel = 'inverse';
-  // sound.pannerAttr().rolloffFactor = 8;
+  const newHowl = new Howl(options);
+  newHowl.pannerAttr().refDistance = distanceVolumeOne;
+  newHowl.pannerAttr().maxDistance = 300;
+  // newHowl.pannerAttr().distanceModel = 'linear';
+  newHowl.pannerAttr().distanceModel = 'exponential';
+  newHowl.pannerAttr().rolloffFactor = 2.4;
+  // newHowl.pannerAttr().distanceModel = 'inverse';
+  // newHowl.pannerAttr().rolloffFactor = 8;
 
-  sound.pos(0, 0, 0);
+  // newHowl.pos(0, 0, 0);
 
   // debug sounds
-  window.sound = sound;
+  window.newHowl = newHowl;
 
   for (const name in options.sprite) {
     bank[name] = name;
@@ -28,7 +28,7 @@ function loadSound(options) {
 
   console.log("sound bank", bank);
 
-  return sound;
+  return newHowl;
 }
 
 const soundh = loadSound(soundData);
@@ -66,6 +66,7 @@ const soundh = loadSound(soundData);
 // }
 
 export class Sounds {
+  states = {};
 
   constructor() {
     if (!bank) {
@@ -85,9 +86,12 @@ export class Sounds {
     // sound.pos(x, y, -distanceVolumeOne / 8);
     const soundHowl = this.toHowl(soundName);
     const playId = soundHowl.play(soundName);
-    soundHowl.pos(x, y, -distanceVolumeOne / 4, playId);
+    if (x !== undefined) {
+      // a spatial sound!
+      soundHowl.pos(x, y, -distanceVolumeOne / 4, playId);
+    }
     
-    console.log("sound at", soundName, x, y, playId, sound._src);
+    console.log("sound at", soundName, x, y, playId, soundHowl._src);
     return playId;
   }
 
@@ -99,6 +103,99 @@ export class Sounds {
     return soundh;
   }
   
+  playJump() {
+    const playId = this.play("jump1");
+    soundh.volume(0.1, playId);
+  }
+
+  touchRightOn() {
+    if (this.states.touchRight) {
+      return;
+    }
+    const playId = this.play("wall-touch-1");
+    soundh.volume(0.1, playId);
+    soundh.stereo(1.0, playId);
+    soundh.loop(true, playId);
+    this.states.touchRight = playId;
+  }
+
+  touchRightOff() {
+    if (!this.states.touchRight) {
+      return;
+    }
+    soundh.stop(this.states.touchRight);
+    delete this.states.touchRight;
+  }
+
+  touchLeftOn() {
+    if (this.states.touchLeft) {
+      return;
+    }
+    const playId = this.play("wall-touch-1");
+    soundh.volume(0.1, playId);
+    soundh.stereo(-1.0, playId);
+    soundh.loop(true, playId);
+    this.states.touchLeft = playId;
+  }
+
+  touchLeftOff() {
+    if (!this.states.touchLeft) {
+      return;
+    }
+    soundh.stop(this.states.touchLeft);
+    delete this.states.touchLeft;
+  }
+
+  walkingOn() {
+    if (this.states.walking) {
+      return;
+    }
+    const playId = this.play("step-1");
+    soundh.volume(0.1, playId);
+    soundh.stereo(0, playId);
+    soundh.loop(true, playId);
+    this.states.walking = playId;
+  }
+
+  walkingOff() {
+    if (!this.states.walking) {
+      return;
+    }
+    soundh.stop(this.states.walking);
+    delete this.states.walking;
+  }
+
+  playLanded() {
+    const playId = this.play("step-1");
+    soundh.volume(0.1, playId);
+    soundh.stereo(0, playId);
+  }
+
+  playSlipped() {
+    const playId = this.play("slip-1");
+    soundh.volume(0.1, playId);
+    soundh.stereo(0, playId);
+  }
+
+  playFlying(intensity) {
+    // intensity 0.0 - 1.0
+    // console.log("fly intensity", intensity);
+    if (this.states.flying) {
+      soundh.volume(intensity, this.states.flying);
+      return;
+    }
+    const playId = this.play("fly");
+    this.states.flying = playId;
+    soundh.volume(intensity, playId);
+    soundh.rate(0.5, playId);
+    soundh.stereo(0, playId);
+    soundh.loop(true, playId);
+  }
+
+  playBumpTop() {
+    const playId = this.play("bump-top-1");
+    soundh.volume(0.05, playId);
+  }
 
   playWind(x, y) {
     const soundHowl = this.toHowl(bank.wind);

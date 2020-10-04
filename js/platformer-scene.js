@@ -5,6 +5,7 @@ import { Sounds, bank, fadeOut, fadeIn } from "./sounds.js";
 const tileIndex = {
   wind: 342,
   snake: 330,
+  endGame: 317,
 }
 
 /**
@@ -30,6 +31,10 @@ export default class PlatformerScene extends Phaser.Scene {
 
   create() {
     console.log("scene create()");
+
+    // for debug
+    window.scene = this;
+
     fadeIn();
 
     this.isPlayerDead = false;
@@ -48,11 +53,11 @@ export default class PlatformerScene extends Phaser.Scene {
       }
       if (tile.index === tileIndex.wind) {
         this.sounds.playWind(tile.pixelX, tile.pixelY);
-      }
-      if (tile.index === tileIndex.snake) {
+      } else if (tile.index === tileIndex.snake) {
         this.sounds.playSnarl(tile.pixelX, tile.pixelY);
+      } else{
+        console.log("unknown spawn type", tile.index);
       }
-      // console.log("wind", tile.index);
     });
 
     // Instantiate a player instance at the location of the "Spawn Point" object in the Tiled map
@@ -99,7 +104,7 @@ export default class PlatformerScene extends Phaser.Scene {
       })
       .setScrollFactor(0);
 
-    // this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
+    this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
   }
 
   update(time, delta) {
@@ -122,10 +127,11 @@ export default class PlatformerScene extends Phaser.Scene {
       const prevTile = this.groundLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
       if (!prevTile) {
         const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
-        if (tile) { 
-          console.log("play!")
-          tile.setCollision(true);
-          this.sounds.play(bank.sounds, worldPoint.x, worldPoint.y);
+        if (tile) {
+          // Place debug blocks that play a local sound 
+          // console.log("play!")
+          // tile.setCollision(true);
+          // this.sounds.play(bank.sounds, worldPoint.x, worldPoint.y);
         } else {
           // clicked outside of the game area
         }

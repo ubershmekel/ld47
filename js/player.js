@@ -3,9 +3,13 @@
  * response to WASD/arrow keys. Call its update method from the scene's update and call its destroy
  * method when you're done with the player.
  */
+const maxVelocityY = 800;
+
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
+    this.wasInAir = false;
+    this.justJumped = false;
 
     // Create the animations we need from the player spritesheet
     const anims = scene.anims;
@@ -26,7 +30,7 @@ export default class Player {
     this.sprite = scene.physics.add
       .sprite(x, y, "player", 0)
       .setDrag(1000, 0)
-      .setMaxVelocity(300, 800)
+      .setMaxVelocity(300, maxVelocityY)
       .setSize(18, 24)
       .setOffset(7, 9);
 
@@ -71,20 +75,57 @@ export default class Player {
       sprite.setAccelerationX(0);
     }
 
+    if (!onGround && !this.wasInAir && !this.justJumped) {
+      // You were on the ground, now you're not,
+      // and you didn't jump. You slipped.
+      this.scene.sounds.playSlipped();
+    }
+
     // Only allow the player to jump if they are on the ground
     if (onGround && (keys.up.isDown || keys.w.isDown)) {
       // 🦘☝
       console.log("jump");
       sprite.setVelocityY(-480);
+      this.scene.sounds.playJump();
+      this.justJumped = true;
+    } else {
+      this.justJumped = false;
     }
 
     // Update the animation/texture based on the state of the player
     if (onGround) {
-      if (sprite.body.velocity.x !== 0) sprite.anims.play("player-run", true);
-      else sprite.anims.play("player-idle", true);
+      if (sprite.body.velocity.x !== 0) {
+        sprite.anims.play("player-run", true);
+        this.scene.sounds.walkingOn();
+      } else {
+        sprite.anims.play("player-idle", true);
+        this.scene.sounds.walkingOff();
+      }
+      if (this.wasInAir) {
+        this.scene.sounds.playLanded();
+      }
+      this.wasInAir = false;
     } else {
+      this.wasInAir = true;
       sprite.anims.stop();
       sprite.setTexture("player", 10);
+      this.scene.sounds.walkingOff();
+    }
+
+    this.scene.sounds.playFlying(0.08 * Math.abs(sprite.body.velocity.y / maxVelocityY));
+
+    if (sprite.body.blocked.up) {
+      this.scene.sounds.playBumpTop();
+    }
+    if (sprite.body.blocked.right) {
+      this.scene.sounds.touchRightOn();
+    } else {
+      this.scene.sounds.touchRightOff();
+    }
+    if (sprite.body.blocked.left) {
+      this.scene.sounds.touchLeftOn();
+    } else {
+      this.scene.sounds.touchLeftOff();
     }
   }
 
