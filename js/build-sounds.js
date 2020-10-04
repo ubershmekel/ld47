@@ -22,8 +22,6 @@ if (process.env.path) {
 }
 console.log("path2", process.env.path);
 console.log("ffmpeg size", fs.statSync(pathToFfmpeg)["size"]);
-require('child_process').spawn(pathToFfmpeg, ['-version']).on('exit', code => console.log('code1', code))
-require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
 
 const root = './assets/audio/';
 const outDir = './dist/'
@@ -43,6 +41,9 @@ var opts = {
 }
 
 process.env.path += ' /opt/build/repo/node_modules/ffmpeg-static/'
+
+require('child_process').spawn(pathToFfmpeg, ['-version']).on('exit', code => console.log('code1', code))
+require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
 
 audiosprite(files, opts, function(err, obj) {
   if (err) return console.error(err)
