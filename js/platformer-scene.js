@@ -155,18 +155,27 @@ export default class PlatformerScene extends Phaser.Scene {
     } 
   }
 
-  checkLedgeProgress() {
+  checkLedgeProgress(deltaMs) {
     const x = this.player.sprite.x;
     if (x > ledgeX.endGame) {
       this.sounds.say(bank.ending);
     } else if (x > ledgeX.ledge3) {
       this.sounds.say(bank.climb_up_dont_leave);
+      counter.timeLedge4Ms += deltaMs;
     } else if (x > ledgeX.firstSnake) {
       this.sounds.say(bank.dont_step_on_snakes);
     } else if (x > ledgeX.ledge2) {
       this.sounds.say(bank.got_over_pit);
+      counter.timeLedge3Ms += deltaMs;
     } else if (x > ledgeX.ledge1) {
       this.sounds.say(bank.wow_ledge);
+      counter.timeLedge2Ms += deltaMs;
+    } else {
+      counter.timeLedge1Ms += deltaMs;
+    }
+
+    if (counter.timeLedge1Ms > 60 * 1000 && counter.timeLedge2Ms < 10) {
+      this.sounds.say(bank.ledge1_clue);
     }
   }
 
@@ -177,7 +186,7 @@ export default class PlatformerScene extends Phaser.Scene {
     this.player.update(time, deltaMs);
     this.sounds.checkSayQ();
 
-    this.checkLedgeProgress();
+    this.checkLedgeProgress(deltaMs);
 
     // if (this.sounds.bank.look._sounds[0]._panner) {
       // console.log("soundx", this.sounds.bank.look._sounds[0]._panner.positionX.value, Howler.ctx.listener.positionX.value);

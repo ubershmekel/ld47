@@ -6,8 +6,13 @@ export const counter = {
   fallHeight: 0,
   wallHugRightMs: 0,
   wallHugLeftMs: 0,
+  timeLedge1Ms: 0,
+  timeLedge2Ms: 0,
+  timeLedge3Ms: 0,
+  timeLedge4Ms: 0,
 }
 
+// For debugging at console.
 window.counter = counter;
 
 export function random(min, max, rounder) {
