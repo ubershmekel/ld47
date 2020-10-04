@@ -40,8 +40,6 @@ var opts = {
   }
 }
 
-process.env.path += ' /opt/build/repo/node_modules/ffmpeg-static/'
-
 require('child_process').spawn(pathToFfmpeg, ['-version']).on('exit', code => console.log('code1', code))
 require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
 
