@@ -96,7 +96,7 @@ export default class PlatformerScene extends Phaser.Scene {
 
     // Help text that has a "fixed" position on the screen
     this.add
-      .text(16, 16, "Arrow/WASD to move & jump\nLeft click to draw platforms", {
+      .text(16, 16, "Arrow/WASD to move & jump", {
         font: "18px monospace",
         fill: "#000000",
         padding: { x: 20, y: 10 },
@@ -105,6 +105,22 @@ export default class PlatformerScene extends Phaser.Scene {
       .setScrollFactor(0);
 
     this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
+  }
+
+  placeDebugTile(worldPoint) {
+    // Left click to draw platforms
+    const prevTile = this.groundLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
+    if (!prevTile) {
+      const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
+      if (tile) {
+        // Place debug blocks that play a local sound 
+        console.log("play!")
+        tile.setCollision(true);
+        this.sounds.play(bank.sounds, worldPoint.x, worldPoint.y);
+      } else {
+        // clicked outside of the game area
+      }
+    } 
   }
 
   update(time, delta) {
@@ -124,18 +140,7 @@ export default class PlatformerScene extends Phaser.Scene {
     const pointer = this.input.activePointer;
     const worldPoint = pointer.positionToCamera(this.cameras.main);
     if (pointer.isDown) {
-      const prevTile = this.groundLayer.getTileAtWorldXY(worldPoint.x, worldPoint.y);
-      if (!prevTile) {
-        const tile = this.groundLayer.putTileAtWorldXY(6, worldPoint.x, worldPoint.y);
-        if (tile) {
-          // Place debug blocks that play a local sound 
-          // console.log("play!")
-          // tile.setCollision(true);
-          // this.sounds.play(bank.sounds, worldPoint.x, worldPoint.y);
-        } else {
-          // clicked outside of the game area
-        }
-      } 
+      // this.placeDebugTile(worldPoint);
     }
 
     if (
