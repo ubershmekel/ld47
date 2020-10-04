@@ -13,9 +13,8 @@ export default class Player {
     this.scene = scene;
     this.wasInAir = false;
     this.justJumped = false;
-    this.maxYSinceGround = 0;
-    this.minYUntilGround = 0;
-  
+    this.maxYSinceGround = y;
+    this.minYUntilGround = y;
   
     // Create the animations we need from the player spritesheet
     const anims = scene.anims;
@@ -101,9 +100,9 @@ export default class Player {
       this.wasInAir = false;
 
       const fallDelta = this.maxYSinceGround - this.minYUntilGround;
-      // console.log("fallDelta", fallDelta, this.maxYSinceGround, this.minYUntilGround);
       if (fallDelta > 300) {
-        this.scene.sounds.say("huge_fall");
+        console.log("fallDelta", fallDelta, this.minYUntilGround, this.maxYSinceGround);
+        this.scene.sounds.sayAnyway("huge_fall");
         counter.fallHeight += fallDelta;
       }
       this.maxYSinceGround = sprite.y;

@@ -250,7 +250,6 @@ export class Sounds {
 
   sayAnyway(line) {
     sayQ.push(line);
-    this.checkSayQ();
   }
 
   say(line) {
