@@ -25,7 +25,7 @@ const ledgeX = {
  */
 export default class PlatformerScene extends Phaser.Scene {
   preload() {
-    this.sounds = new Sounds();
+    this.sounds = new Sounds(this);
     this.load.spritesheet(
       "player",
       "./assets/spritesheets/0x72-industrial-player-32px-extruded.png",
@@ -186,7 +186,7 @@ export default class PlatformerScene extends Phaser.Scene {
 
     this.marker.update();
     this.player.update(time, deltaMs);
-    this.sounds.checkSayQ();
+    // this.sounds.checkSayQ();
 
     this.checkLedgeProgress(deltaMs);
 
@@ -212,8 +212,8 @@ export default class PlatformerScene extends Phaser.Scene {
       this.isPlayerDead = true;
 
       counter.death += 1;
-      const deathVariation = (counter.death % 3) + 1;
-      this.sounds.sayAnyway('back_to_start_' + deathVariation);
+      const deathVariation = (counter.death % 4) + 1;
+      this.sounds.sayAnyway('fell_to_start_' + deathVariation);
       console.log("counters", counter);
 
       const cam = this.cameras.main;
@@ -237,3 +237,32 @@ export default class PlatformerScene extends Phaser.Scene {
     }
   }
 }
+
+const SceneB = new Phaser.Class({
+
+  Extends: Phaser.Scene,
+
+  initialize:
+
+  function SceneB ()
+  {
+      Phaser.Scene.call(this, { key: 'sceneB' });
+  },
+
+  preload: function ()
+  {
+      this.load.image('face', 'assets/pics/bw-face.png');
+  },
+
+  create: function ()
+  {
+      this.add.image(400, 300, 'face').setAlpha(0.5);
+
+      this.input.once('pointerdown', function () {
+
+          this.scene.resume('sceneA');
+
+      }, this);
+  }
+
+});

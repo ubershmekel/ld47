@@ -4,8 +4,11 @@ import soundData from "../dist/soundData.js";
 export const bank = {
 }
 
+const globalStates = {};
+const sayQ = [];
+globalStates.sayingNowId = 0;
 const distanceVolumeOne = 32;
-let sayingNowId = 0;
+const soundh = loadSound(soundData);
 
 function loadSound(options) {
   console.log('sound options', options);
@@ -32,46 +35,10 @@ function loadSound(options) {
   return newHowl;
 }
 
-const soundh = loadSound(soundData);
-
-// export let bank = null;
-
-// function loadBank() {
-// bank = {};
-
-// Howler.pos(this.x, this.y, -0.5);
-
-// bank.wind = loadSound({
-//   src: ['../assets/audio/wind.mp3'],
-//   loop: true,
-//   volume: 0.5,
-// });
-
-// bank.snarl = loadSound({
-//   src: ['../assets/audio/snarl.mp3'],
-//   loop: true,
-//   volume: 0.5,
-// });
-
-// bank.look = loadSound({
-//   src: ['../assets/audio/sounds.mp3'],
-//   // sprite: {
-//   //   lightning: [2000, 4147],
-//   //   rain: [8000, 9962, true],
-//   //   thunder: [19000, 13858],
-//   //   music: [34000, 31994, true]
-//   // },
-//   // volume: 0
-//   // loop: true,
-// });
-// }
-
-// the member `states` gets reset every scene reset
-const globalStates = {};
-const sayQ = [];
-
 export class Sounds {
-  constructor() {
+  scene = null;
+  constructor(scene) {
+    this.scene = scene;
     if (!bank) {
       loadBank();
     }
@@ -250,6 +217,7 @@ export class Sounds {
 
   sayAnyway(line) {
     sayQ.push(line);
+    this.checkSayQ();
   }
 
   say(line) {
@@ -266,20 +234,37 @@ export class Sounds {
     this.sayAnyway(line);
   }
 
+  isSaying() {
+    if (!globalStates.sayingNowId) {
+      return false;
+    }
+    return soundh.playing(globalStates.sayingNowId);
+  }
+
+  // verifyPausedWhileSay() {
+  //   console.log("verifyPausedWhileSay");
+  //   if (this.isSaying()) {
+  //     this.scene.scene.pause();
+  //     setTimeout(() => {
+  //       // arrow function to save `this`
+  //       this.verifyPausedWhileSay();
+  //     }, 20);
+  //   } else {
+  //     this.scene.scene.resume();
+  //   }
+  // }
+
   checkSayQ() {
+    if (this.isSaying()) {
+      return;
+    }
     if (sayQ.length == 0) {
       return;
     }
-    if (sayingNowId) {
-      const isSayingSomething = soundh.playing(sayingNowId);
-      if (isSayingSomething) {
-        // soundh.on('end', this.checkSayQ, sayingNowId);
-        return;
-      }
-    }
     const line = sayQ.shift();
-    sayingNowId = this.play(line);
-    soundh.volume(0.4, sayingNowId);
+    globalStates.sayingNowId = this.play(line);
+    soundh.volume(0.4, globalStates.sayingNowId);
+    // this.verifyPausedWhileSay();
   }
 
   lastCliff = null;

@@ -6,7 +6,7 @@ import { counter } from './utils.js';
  * method when you're done with the player.
  */
 const maxVelocityY = 800;
-const maxVelocityX = 300;
+const maxVelocityX = 250;
 
 export default class Player {
   constructor(scene, x, y) {
@@ -58,11 +58,21 @@ export default class Player {
     this.sprite.body.moves = false;
   }
 
+  unfreeze() {
+    this.sprite.body.moves = true;
+  }
+
   update(time, deltaMs) {
     const { keys, sprite } = this;
     const onGround = sprite.body.blocked.down;
+    if (this.scene.sounds.isSaying()) {
+      this.freeze();
+    } else {
+      this.unfreeze(); ;
+    }
+
     // const acceleration = onGround ? 600 : 200;
-    const acceleration = 600;
+    const acceleration = 400;
     // console.log("sprite xy", this.sprite.x, this.sprite.y);
     //Howler.pos(this.sprite.x, this.sprite.y, 0);
 
