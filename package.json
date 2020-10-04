@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "build-sounds": "node js/build-sounds.js"
+    "build-sounds": "node build/build-sounds.js"
   },
   "repository": {
     "type": "git",
