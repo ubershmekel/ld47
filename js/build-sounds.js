@@ -41,7 +41,7 @@ var opts = {
 }
 
 require('child_process').spawn(pathToFfmpeg, ['-version']).on('exit', code => console.log('code1', code))
-// require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
+require('child_process').spawn('ffmpeg', ['-version']).on('exit', code => console.log('code2', code))
 
 // audiosprite(files, opts, function(err, obj) {
 //   if (err) return console.error(err)
