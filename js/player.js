@@ -65,6 +65,7 @@ export default class Player {
   update(time, deltaMs) {
     const { keys, sprite } = this;
     const onGround = sprite.body.blocked.down;
+
     if (this.scene.sounds.isSaying()) {
       this.freeze();
     } else {
@@ -76,9 +77,10 @@ export default class Player {
     // console.log("sprite xy", this.sprite.x, this.sprite.y);
     //Howler.pos(this.sprite.x, this.sprite.y, 0);
 
-    if (!onGround && !this.wasInAir && !this.justJumped) {
+    if (!onGround && !this.wasInAir && !this.justJumped && this.sprite.body.moves) {
       // You were on the ground, now you're not,
       // and you didn't jump. You slipped.
+      // Also without `this.sprite.body.moves` the freezes cause a slip.
       this.scene.sounds.playSlipped();
       counter.slips += 1;
     }
@@ -107,7 +109,6 @@ export default class Player {
       if (this.wasInAir) {
         this.scene.sounds.playLanded();
       }
-      this.wasInAir = false;
 
       const fallDelta = this.maxYSinceGround - this.minYUntilGround;
       if (fallDelta > 300) {
@@ -118,7 +119,6 @@ export default class Player {
       this.maxYSinceGround = sprite.y;
       this.minYUntilGround = sprite.y;
     } else {
-      this.wasInAir = true;
       sprite.anims.stop();
       sprite.setTexture("player", 10);
       this.scene.sounds.walkingOff();
@@ -196,6 +196,8 @@ export default class Player {
     if (counter.wallHugLeftMs > 7000) {
       this.scene.sounds.say('love_wall_left');
     }
+
+    this.wasInAir = !onGround;
   }
 
   destroy() {
