@@ -23,19 +23,17 @@ const config = {
 };
 
 let game = null;
-
-document.body.addEventListener('click', function() {
+function startGame() {
   // Waiting for a click to avoid the Audio Context being paused
   // https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
-  
-  // context.resume().then(() => {
-    // sound.play();
-    if (!game) {
-      console.log('Game started');
-      game = new Phaser.Game(config);
-    }
-  // });
-});
+  if (!game) {
+    console.log('Game started');
+    game = new Phaser.Game(config);
+  }
+}
+
+document.body.onkeyup = startGame;
+document.body.addEventListener('click', startGame);
 
 // Allow users to cheat by just typing "cheat" into the console
 window.cheat = new Image();
