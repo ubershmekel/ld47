@@ -29,11 +29,11 @@ function startGame() {
   if (!game) {
     console.log('Game started');
     game = new Phaser.Game(config);
+    document.querySelector('#game-container').focus()
   }
 }
 
-document.body.onkeyup = startGame;
-document.body.addEventListener('click', startGame);
+document.querySelector('#start-button').addEventListener('click', startGame);
 
 // Allow users to cheat by just typing "cheat" into the console
 window.cheat = new Image();
