@@ -107,7 +107,8 @@ export default class Player {
         this.scene.sounds.walkingOff();
       }
       if (this.wasInAir) {
-        this.scene.sounds.playLanded();
+        const tileY = this.scene.groundLayer.getTileAtWorldXY(sprite.x, sprite.y, true).y;
+        this.scene.sounds.playLanded(tileY);
       }
 
       const fallDelta = this.maxYSinceGround - this.minYUntilGround;

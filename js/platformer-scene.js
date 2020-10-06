@@ -10,6 +10,7 @@ const tileIndex = {
   ledge1: 325,
   ledge2: 326,
   ledge3: 327,
+  bird: 774,
 }
 
 const ledgeX = {
@@ -57,7 +58,7 @@ export default class PlatformerScene extends Phaser.Scene {
     map.createDynamicLayer("Background", tiles);
     this.groundLayer = map.createDynamicLayer("Ground", tiles);
     map.createDynamicLayer("Foreground", tiles);
-    
+
     const wind = map.createStaticLayer("Spawns", tiles);
     this.sounds.doOnce('setup-grid-sounds', () => {
       ledgeX.firstSnake = 99999;
@@ -67,6 +68,8 @@ export default class PlatformerScene extends Phaser.Scene {
         }
         if (tile.index === tileIndex.wind) {
           this.sounds.playWind(tile.pixelX, tile.pixelY);
+        } else if (tile.index === tileIndex.bird) {
+          this.sounds.playBird(tile.pixelX, tile.pixelY);
         } else if (tile.index === tileIndex.snake) {
           this.sounds.playSnarl(tile.pixelX, tile.pixelY);
           if (tile.pixelX < ledgeX.firstSnake) {
@@ -133,8 +136,8 @@ export default class PlatformerScene extends Phaser.Scene {
     this.time.delayedCall(500, () => {
       this.sounds.say(bank.hey_buddy);
     })
-    
-    
+
+
     // Block view, we are blind
     if (!window.activateCheat) {
       this.viewBlock = this.add.rectangle(map.widthInPixels / 2, map.heightInPixels / 2, map.widthInPixels, map.heightInPixels, 0x111144);
@@ -154,7 +157,7 @@ export default class PlatformerScene extends Phaser.Scene {
       } else {
         // clicked outside of the game area
       }
-    } 
+    }
   }
 
   checkLedgeProgress(deltaMs) {
@@ -176,7 +179,7 @@ export default class PlatformerScene extends Phaser.Scene {
       counter.timeLedge1Ms += deltaMs;
     }
 
-    if (counter.timeLedge1Ms > 60 * 1000 && counter.timeLedge2Ms < 10) {
+    if (counter.timeLedge1Ms > 90 * 1000 && counter.timeLedge2Ms < 10) {
       this.sounds.say(bank.ledge1_clue);
     }
   }
@@ -191,9 +194,9 @@ export default class PlatformerScene extends Phaser.Scene {
     this.checkLedgeProgress(deltaMs);
 
     // if (this.sounds.bank.look._sounds[0]._panner) {
-      // console.log("soundx", this.sounds.bank.look._sounds[0]._panner.positionX.value, Howler.ctx.listener.positionX.value);
+    // console.log("soundx", this.sounds.bank.look._sounds[0]._panner.positionX.value, Howler.ctx.listener.positionX.value);
     //}
-    
+
     // audio position
     this.sounds.listenerPos(this.player.sprite.x, this.player.sprite.y);
 
@@ -244,25 +247,22 @@ const SceneB = new Phaser.Class({
 
   initialize:
 
-  function SceneB ()
-  {
+    function SceneB() {
       Phaser.Scene.call(this, { key: 'sceneB' });
+    },
+
+  preload: function () {
+    this.load.image('face', 'assets/pics/bw-face.png');
   },
 
-  preload: function ()
-  {
-      this.load.image('face', 'assets/pics/bw-face.png');
-  },
+  create: function () {
+    this.add.image(400, 300, 'face').setAlpha(0.5);
 
-  create: function ()
-  {
-      this.add.image(400, 300, 'face').setAlpha(0.5);
+    this.input.once('pointerdown', function () {
 
-      this.input.once('pointerdown', function () {
+      this.scene.resume('sceneA');
 
-          this.scene.resume('sceneA');
-
-      }, this);
+    }, this);
   }
 
 });

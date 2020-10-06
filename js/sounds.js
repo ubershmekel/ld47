@@ -144,8 +144,13 @@ export class Sounds {
     delete globalStates.walking;
   }
 
-  playLanded() {
-    const playId = this.play("step-1");
+  playLanded(tileY) {
+    // top tileY is 5, bottom is 17
+    // divided by 3 that means [1, 5];
+    // dd = tileY / 3
+    // 5 - dd = [0, 4]
+    const toPlay = 5 - Math.floor(tileY / 3)
+    const playId = this.play("piano_a" + toPlay);
     soundh.volume(0.1, playId);
     soundh.stereo(0, playId);
   }
@@ -174,6 +179,15 @@ export class Sounds {
   playBumpTop() {
     const playId = this.play("bump-top-1");
     soundh.volume(0.15, playId);
+  }
+
+  playBird(x, y) {
+    const soundHowl = this.toHowl(bank.bird);
+    const playId = this.play(bank.bird, x, y);
+    const speed = random(0.8, 1.2);
+    soundHowl.rate(speed, playId);
+    soundHowl.loop(true, playId);
+    soundHowl.volume(0.2, playId);
   }
 
   playWind(x, y) {
