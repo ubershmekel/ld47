@@ -69,7 +69,7 @@ export default class Player {
     if (this.scene.sounds.isSaying()) {
       this.freeze();
     } else {
-      this.unfreeze(); ;
+      this.unfreeze();
     }
 
     // const acceleration = onGround ? 600 : 200;
