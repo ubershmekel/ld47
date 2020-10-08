@@ -1,92 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="icon" href="/favicon.ico?v=1.1"> 
-    <title>Don't Go</title>
-    <meta name="description" content="A platformer game you can play without your eyes. Made for Ludum Dare Game Jam 47.">
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:creator" content="@ubershmekel">
-    <meta name="twitter:title" content="Don't Go">
-    <meta name="twitter:description" content="A platformer game you can play with your ears, not your eyes. Made for Ludum Dare 47.">
-    <meta name="twitter:image" content="https://dontgo.netlify.app/assets/images/dontgo-logo-2-1.png">
-    <meta name="twitter:image:alt" content="don't go, a blind platformer game">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="icon" href="/favicon.ico?v=1.1">
+  <title>Don't Go</title>
+  <meta name="description" content="A platformer game you can play without your eyes. Made for Ludum Dare Game Jam 47.">
 
-    <meta property="og:title" content="don't go">
-    <meta property="og:description" content="A platformer game you can play without your eyes. Can you map out the jumps and reach the goal? Made for Ludum Dare Game Jam 47.">
-    <meta property="og:image" content="https://dontgo.netlify.app/assets/images/dontgo-logo-2-1.png">
-    <meta property="og:url" content="https://dontgo.netlify.app">
-    
-    <style>
-      html,
-      body,
-      #game-container {
-        margin: 0;
-        padding: 0;
-      }
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@ubershmekel">
+  <meta name="twitter:title" content="Don't Go">
+  <meta name="twitter:description"
+    content="A platformer game you can play with your ears, not your eyes. Made for Ludum Dare 47.">
+  <meta name="twitter:image" content="https://dontgo.netlify.app/assets/images/dontgo-logo-2-1.png">
+  <meta name="twitter:image:alt" content="don't go, a blind platformer game">
 
-      body {
-        padding: 0em 1em;
-      }
+  <meta property="og:title" content="don't go">
+  <meta property="og:description"
+    content="A platformer game you can play without your eyes. Can you map out the jumps and reach the goal? Made for Ludum Dare Game Jam 47.">
+  <meta property="og:image" content="https://dontgo.netlify.app/assets/images/dontgo-logo-2-1.png">
+  <meta property="og:url" content="https://dontgo.netlify.app">
 
-      #game-container {
-        min-width: 50vh;
-        min-height: 50vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #300;
-      }
+  <style>
+    html,
+    body,
+    #game-container {
+      margin: 0;
+      padding: 0;
+    }
 
-      #game-container > canvas {
-        border-radius: 5px;
-      }
-    </style>
+    body {
+      padding: 0em 1em;
+    }
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4533496-26"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+    #game-container {
+      min-width: 50vh;
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #300;
+    }
 
-      gtag('config', 'UA-4533496-26');
-    </script>
+    #game-container>canvas {
+      border-radius: 5px;
+    }
 
-  </head>
+    hr {
+      height: 3em;
+      width: 100%;
+      background-color: #666;
+    }
+  </style>
 
-  <body>
-    <h1>
-      Don't Go
-    </h1>
-    <ul>
-      <li>This is a hard <strong>blind</strong> platformer game</li>
-      <li>Put on your stereo headphones 🎧 close your eyes</li>
-      <li>Use the arrow keys or WASD ⌨️</li>
-      <li>Learn your surroundings by the sounds you hear. E.g. rocks falling on the right indicate a cliff on the right</li>
-      <li>Get more clues, and a map <a href="https://ldjam.com/events/ludum-dare/47/dont-go">here</a></li>
-      <li><button id="start-button">Click here to start</button></li>
-    </ul>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-4533496-26"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-4533496-26');
+  </script>
+
+</head>
+
+<body>
+  <h1>
+    Don't Go
+  </h1>
+  <ul>
+    <li>This is a hard <strong>blind</strong> platformer game</li>
+    <li>Put on your stereo headphones 🎧 close your eyes</li>
+    <li>Do not use SAFARI on MacOS, <a href="https://github.com/goldfire/howler.js/issues/1407">some sounds are
+        missing</a>. Use Chrome.</li>
+    <li>Use the arrow keys or WASD ⌨️</li>
+    <li>Learn your surroundings by the sounds you hear. E.g. rocks falling on the right indicate a cliff on the right
+    </li>
+    <li>Get more spoilers, clues, and a map at the bottom of this page</li>
+    <li><button id="start-button">Click here to start</button></li>
+  </ul>
 
 
-    <div id="game-container" tabindex="0"></div>
+  <div id="game-container" tabindex="0"></div>
 
-    <p>
-      Game made for <a href="https://ldjam.com/events/ludum-dare/47/dont-go">Ludum Dare 47</a> by <a href="https://yuvalg.com">ubershmekel</a> source on <a href="https://github.com/ubershmekel/ld47">github</a>.
-    </p>
+  <h2>Spoilers and clues ahead, please read as few as possible</h2>
+  <hr />
+  <hr />
+  <hr />
+  <hr />
+  <ul>
+    <li>This is a 2D platformer, your goal is to go to the top-right.</li>
 
-    <!-- <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script> -->
-    <script src="./js/vendor/phaser.js"></script>
-    <script src="./js/vendor/howler.js"></script>
-    <script src="./js/index.js" type="module"></script>
+    <li>Sometimes you have to go left a bit before jumping up-right to get over a ledge.</li>
 
-    <script nomodule>
-      alert(
-        "This browser doesn't support JS modules, so the example won't work as is. Try the latest version of Chrome, FF or Safari!"
-      );
-    </script>
-  </body>
+    <li>The down button does nothing.</li>
+
+    <li>
+      You can hear crumbling rocks on the right audio channel when you’re almost falling off a ledge to your right.
+    </li>
+
+    <li>When you hear your head bump above you, try to move slowly to the left until you don’t hear the bump, then jump
+      and move right at the same time to land on the ledge above you.</li>
+
+    <li>The strong wind sounds always mean you should be careful, jump over, or stay away. You might need to get close
+      to them to be able to jump over them. The rock crumbling sound is your safety net.</li>
+
+    <li>The snakes just snarl, I was thinking of maybe making them chase you and kill you, but ran out of time.</li>
+
+    <li>
+      You can hear a "whoa" sound when you slip off a ledge.
+    </li>
+
+    <li>
+      When you land, you'll hear a piano note. Its octave corresponds to how high the floor is.
+    </li>
+
+    <li>If you beat the game, you’ll learn how to turn on the visual mode to see the level design.</li>
+
+    <li>There are 4 sections: ledge, the gap (just one hole in the middle), snakes, platforms. The last section of
+      platforms you need to climb to the top and jump. The platforms are just like the first section, but you need to do
+      it 4 times, and then just walk to the right in the end. Just stay away from the windy ledges.</li>
+
+    <li>Each section has a safety wall to its left, you can always walk left at the start of a section and hear the left
+      wall sound, so you can re-orient yourself.</li>
+
+    <li>Here is a <a href="./assets/tilemaps/platformer.png">map</a></li>
+  </ul>
+
+  <p>
+    Game made for <a href="https://ldjam.com/events/ludum-dare/47/dont-go">Ludum Dare 47</a> by <a
+      href="https://yuvalg.com">ubershmekel</a> source on <a href="https://github.com/ubershmekel/ld47">github</a>.
+  </p>
+
+  <!-- <script src="//cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script> -->
+  <script src="./js/vendor/phaser.js"></script>
+  <script src="./js/vendor/howler.js"></script>
+  <script src="./js/index.js" type="module"></script>
+
+  <script nomodule>
+    alert(
+      "This browser doesn't support JS modules, so the example won't work as is. Try the latest version of Chrome, FF or Safari!"
+    );
+  </script>
+</body>
+
 </html>
